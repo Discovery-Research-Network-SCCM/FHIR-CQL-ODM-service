@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	version="2.1">
+	<persistence-unit name="USCIITG_PU">
+		<!-- transaction-type="JTA" -->
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<non-jta-data-source>java:/MySqlRedCapDS</non-jta-data-source>
+		<class>org.partners.usciitg_prep.fhir.model.CrfElmQuery</class>
+		<class>org.partners.usciitg_prep.fhir.model.DagFhirServer</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+		</properties>
+	</persistence-unit>
+</persistence>

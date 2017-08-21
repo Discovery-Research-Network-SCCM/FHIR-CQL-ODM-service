@@ -1,0 +1,63 @@
+{
+  "resourceType": "MedicationOrder",
+  "id": "fhirTestMedicationOrder2",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://mcm.usciitg-prep.org",
+      "value": "fhirTestMedicationOrder2"
+    }
+  ],
+  "dateWritten": "2016-06-08",
+  "dateEnded": "2016-06-10",
+  "status": "completed",
+  "patient": {
+    "reference": "Patient/fhirTest",
+    "display": "Fhir Test"
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "260101",
+        "display": "Oseltamivir"
+      }    
+    ]
+  },
+  "dosageInstruction": [
+    {
+      "text": "Take 5ml three times daily",
+      "timing": {
+        "repeat": {
+          "frequency": 1,
+          "period": 12,
+          "periodUnits": "h"
+        }
+      },
+      "siteCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "181220002",
+            "display": "Entire oral cavity"
+          }
+        ]
+      },
+      "route": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "127492001",
+            "display": "Nasogastric use"
+          }
+        ]
+      },
+      "doseQuantity": {
+        "value": 150,
+        "unit": "mg",
+        "system": "http://unitsofmeasure.org",
+        "code": "mg"
+      }
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_0.xsd" version="2.0">
+	<description>FHIR Terminology JPA XML Application</description>
+	<package>org.hl7.fhir.dstu3.model</package>
+	<mapped-superclass class="org.hl7.fhir.dstu3.model.Resource" access="PROPERTY">
+		<attributes>
+			<id name="id">
+				<column name="id"/>
+			</id>
+			<transient name="empty"/>
+			<transient name="resourceType"/>
+			<transient name="idBase"/>
+			<transient name="idElement"/>
+			<transient name="implicitRules"/>
+			<transient name="implicitRulesElement"/>
+			<transient name="language"/>
+			<transient name="languageElement"/>
+			<transient name="meta"/>
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.hl7.fhir.dstu3.model.Element" access="PROPERTY">
+		<attributes>
+			<id name="id">
+				<column name="id"/>
+			</id>
+			<transient name="extension"/>
+			<transient name="extensionFirstRep"/>
+			<transient name="empty"/>
+			<transient name="idBase"/>
+			<transient name="idElement"/>
+		</attributes>
+	</mapped-superclass>
+	<entity class="org.hl7.fhir.dstu3.model.ValueSet" name="ValueSet" access="PROPERTY" metadata-complete="false">
+		<table name="value_set"/>
+		<attributes>
+			<basic name="version">
+				<column name="version" length="250"/>
+			</basic>
+			<embedded name="expansion"/>
+			<transient name="contact"/>
+			<transient name="identifier"/>
+			<transient name="jurisdiction"/>
+			<transient name="useContext"/>
+			<transient name="empty"/>
+			<transient name="resourceType"/>
+			<transient name="contactFirstRep"/>
+			<transient name="identifierFirstRep"/>
+			<transient name="jurisdictionFirstRep"/>
+			<transient name="useContextFirstRep"/>
+			<transient name="compose"/>
+			<transient name="copyright"/>
+			<transient name="copyrightElement"/>
+			<transient name="date"/>
+			<transient name="dateElement"/>
+			<transient name="description"/>
+			<transient name="descriptionElement"/>
+			<transient name="experimental"/>
+			<transient name="experimentalElement"/>
+			<transient name="extensible"/>
+			<transient name="extensibleElement"/>
+			<transient name="immutable"/>
+			<transient name="immutableElement"/>
+			<transient name="name"/>
+			<transient name="nameElement"/>
+			<transient name="publisher"/>
+			<transient name="publisherElement"/>
+			<transient name="purpose"/>
+			<transient name="purposeElement"/>
+			<transient name="status"/>
+			<transient name="statusElement"/>
+			<transient name="title"/>
+			<transient name="titleElement"/>
+			<transient name="url"/>
+			<transient name="urlElement"/>
+			<transient name="versionElement"/>
+		</attributes>
+	</entity>
+	<entity class="org.hl7.fhir.dstu3.model.ValueSet$ValueSetExpansionContainsComponent" access="PROPERTY">
+		<table name="value_set_value"/>
+		<attributes>
+			<basic name="code">
+				<column name="code" length="250"/>
+			</basic>
+			<basic name="system">
+				<column name="system" length="250"/>
+			</basic>
+			<transient name="contains"/>
+			<transient name="designation"/>
+			<transient name="empty"/>
+			<transient name="containsFirstRep"/>
+			<transient name="designationFirstRep"/>
+			<transient name="abstract"/>
+			<transient name="abstractElement"/>
+			<transient name="codeElement"/>
+			<transient name="display"/>
+			<transient name="displayElement"/>
+			<transient name="inactive"/>
+			<transient name="inactiveElement"/>
+			<transient name="systemElement"/>
+			<transient name="version"/>
+			<transient name="versionElement"/>
+		</attributes>
+	</entity>
+	<embeddable class="org.hl7.fhir.dstu3.model.ValueSet$ValueSetExpansionComponent" access="PROPERTY">
+		<attributes>
+			<!-- <element-collection name="contains" access="PROPERTY" target-class="org.hl7.fhir.dstu3.model.ValueSet$ValueSetExpansionContainsComponent"> 
+				<collection-table name="value_set_value"> <join-column name="valueSetId" 
+				/> </collection-table> </element-collection> -->
+			<one-to-many name="contains" fetch="EAGER" target-entity="org.hl7.fhir.dstu3.model.ValueSet$ValueSetExpansionContainsComponent">
+				<join-column name="valueSetId" referenced-column-name="id"/>
+			</one-to-many>
+			<transient name="parameter"/>
+			<transient name="containsFirstRep"/>
+			<transient name="parameterFirstRep"/>
+			<transient name="empty"/>
+			<transient name="identifier"/>
+			<transient name="identifierElement"/>
+			<transient name="offset"/>
+			<transient name="offsetElement"/>
+			<transient name="timestamp"/>
+			<transient name="timestampElement"/>
+			<transient name="total"/>
+			<transient name="totalElement"/>
+		</attributes>
+	</embeddable>
+</entity-mappings>

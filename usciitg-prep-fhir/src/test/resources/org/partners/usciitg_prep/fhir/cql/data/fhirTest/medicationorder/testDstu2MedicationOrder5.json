@@ -1,0 +1,46 @@
+{
+  "resourceType": "MedicationOrder",
+  "id": "fhirTestMedicationOrder5",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://mcm.usciitg-prep.org",
+      "value": "fhirTestMedicationOrder5"
+    }
+  ],
+  "dateWritten": "2016-06-03",
+  "status": "active",
+  "patient": {
+    "reference": "Patient/fhirTest",
+    "display": "Fhir Test"
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "5492",
+        "display": "Hydrocortisone"
+      }     
+    ]
+  },
+  "dosageInstruction": [
+    {
+      "text": "50 mg",
+      "route": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "47625008",
+            "display": "Intravenous route"
+          }
+        ]
+      },
+      "doseQuantity": {
+        "value": 50,
+        "unit": "mg",
+        "system": "http://unitsofmeasure.org",
+        "code": "mg"
+      }
+    }
+  ]
+}

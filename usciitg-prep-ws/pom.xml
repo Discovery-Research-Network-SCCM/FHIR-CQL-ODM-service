@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>usciitg-prep-mcm</artifactId>
+		<groupId>org.partners.usciitg-prep</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>usciitg-prep-ws</artifactId>
+	<packaging>war</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
+
+		<!-- maven-compiler-plugin -->
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		
+		<!-- other plugin versions -->
+		<version.resteasy>3.0.8.Final</version.resteasy>
+		
+        <!-- integration test properties -->
+        <usciitg.datasource>java:/MySqlRedCapDS</usciitg.datasource>        
+		<skipITs>true</skipITs>        
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.partners.usciitg-prep</groupId>
+			<artifactId>usciitg-prep-fhir</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.partners.usciitg-prep</groupId>
+			<artifactId>usciitg-prep-terminology</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>lucene-analyzers-common</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers-phonetic</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.partners.usciitg-prep</groupId>
+			<artifactId>usciitg-prep-odm</artifactId>			
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.11.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<groupId>org.hibernate</groupId>
+			<version>4.3.11.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<groupId>org.hibernate.common</groupId>
+			<version>4.0.4.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<version>1.0.0.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>hibernate-search-engine</artifactId>
+			<groupId>org.hibernate</groupId>
+			<version>4.5.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>hibernate-search-orm</artifactId>
+			<groupId>org.hibernate</groupId>
+			<version>4.5.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<artifactId>hibernate-validator</artifactId>
+			<groupId>org.hibernate</groupId>
+			<version>5.1.0.Final</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>${version.resteasy}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+			<version>${version.resteasy}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>${version.resteasy}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.4</version>
+			<!--<scope>provided</scope> -->
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${version.spring}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-core</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.11.1.1</version>
+			<scope>test</scope>
+		</dependency>
+     	<dependency>
+			<groupId>org.partners.usciitg-prep</groupId>
+			<artifactId>usciitg-prep-fhir</artifactId>
+			<version>1.0-SNAPSHOT</version>
+      		<type>test-jar</type>
+      		<scope>test</scope>
+    	</dependency>
+     	<dependency>
+			<groupId>org.partners.usciitg-prep</groupId>
+			<artifactId>usciitg-prep-terminology</artifactId>
+			<version>1.0-SNAPSHOT</version>
+      		<type>test-jar</type>
+      		<scope>test</scope>
+    	</dependency>    	
+	</dependencies>
+
+	<build>
+		<finalName>usciitg-prep-ws</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${version.surefire.plugin}</version>
+				<configuration>
+					<systemPropertyVariables>
+            			<usciitg.db.driver>${usciitg.db.driver}</usciitg.db.driver>
+            			<usciitg.db.user>${usciitg.db.user}</usciitg.db.user>
+            			<usciitg.db.password>${usciitg.db.password}</usciitg.db.password>
+            			<usciitg.db>${usciitg.db}</usciitg.db>
+            			<usciitg.datasource>${usciitg.datasource}</usciitg.datasource>
+            		</systemPropertyVariables>
+            		<skipITs>${skipITs}</skipITs>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${version.surefire.plugin}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

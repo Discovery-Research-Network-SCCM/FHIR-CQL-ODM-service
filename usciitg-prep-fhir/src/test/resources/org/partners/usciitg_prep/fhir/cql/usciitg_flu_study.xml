@@ -1,0 +1,1306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="urn:hl7-org:elm:r1" xmlns:t="urn:hl7-org:elm-types:r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fhir="http://hl7.org/fhir" xmlns:a="urn:hl7-org:cql-annotations:r1">
+	<identifier id="usciitg_flu_study" version="0.1"/>
+	<schemaIdentifier id="urn:hl7-org:elm" version="r1"/>
+	<usings>
+		<def localIdentifier="System" uri="urn:hl7-org:elm-types:r1"/>
+		<def localIdentifier="FHIR" uri="http://hl7.org/fhir" version="1.0.2"/>
+	</usings>
+	<parameters>
+		<def name="EncounterStart" accessLevel="Public" parameterType="xsd:dateTime" />
+		<def name="EncounterEnd" accessLevel="Public" parameterType="xsd:dateTime" />			
+	</parameters>
+	<valueSets>
+		<def name="Influenza" id="Influenza.Test.OID" accessLevel="Public"/>
+		<def name="InfluenzaPositive" id="Influenza.Positive.Test.OID" accessLevel="Public"/>
+		<def name="InfluenzaMolecular" id="Influenza.Molecular.Test.OID" accessLevel="Public"/>
+		<def name="InfluenzaNonMolecular" id="Influenza.NonMolecular.Test.OID" accessLevel="Public"/>
+		<def name="Platelet" id="Platelet.Test.OID" accessLevel="Public"/>
+		<def name="Urine" id="Urine.Test.OID" accessLevel="Public"/>
+		<def name="Creatinine" id="Creatinine.Test.OID" accessLevel="Public"/>		
+		<def name="Vasopressor" id="Vasopressor.Test.OID" accessLevel="Public"/>
+		<def name="Dopamine" id="Dopamine.Test.OID" accessLevel="Public"/>		
+		<def name="Dobutamine" id="Dobutamine.Test.OID" accessLevel="Public"/>		
+		<def name="Milrinone" id="Milrinone.Test.OID" accessLevel="Public"/>		
+		<def name="Epinephrine" id="Epinephrine.Test.OID" accessLevel="Public"/>		
+		<def name="Norepinephrine" id="Norepinephrine.Test.OID" accessLevel="Public"/>		
+		<def name="Vasopressin" id="Vasopressin.Test.OID" accessLevel="Public"/>		
+		<def name="Phenylephrine" id="Phenylephrine.Test.OID" accessLevel="Public"/>				
+		<def name="Antiviral" id="Antiviral.Test.OID" accessLevel="Public"/>
+		<def name="Oseltamivir" id="Oseltamivir.Test.OID" accessLevel="Public"/>
+		<def name="Zanamivir" id="Zanamivir.Test.OID" accessLevel="Public"/>
+		<def name="Peramivir" id="Peramivir.Test.OID" accessLevel="Public"/>
+		<def name="Amantadine" id="Amantadine.Test.OID" accessLevel="Public"/>
+		<def name="Rimantadine" id="Rimantadine.Test.OID" accessLevel="Public"/>
+		<def name="Antibiotic" id="Antibacterial.Test.OID" accessLevel="Public"/>
+		<def name="Corticosteroid" id="Corticosteroid.Test.OID" accessLevel="Public"/>
+		<def name="Antifungal" id="Antifungal.Test.OID" accessLevel="Public"/>
+		<def name="Fluvax" id="Fluvax.Test.OID" accessLevel="Public"/>
+		<def name="IcuAdmit" id="IcuAdmit.Test.OID" accessLevel="Public"/>
+	</valueSets>
+	<codeSystems>
+		<def name="SNOMED" id="http://snomed.info/sct" accessLevel="Public" />		
+		<def name="observation-category" id="http://hl7.org/fhir/observation-category" accessLevel="Public" />	
+	</codeSystems>
+	<statements>
+		<def name="icufluinclusion" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="And">
+					<operand xsi:type="Not">
+						<operand xsi:type="IsNull">
+							<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+						</operand>
+					</operand>					
+					<operand xsi:type="Greater">
+						<operand xsi:type="Count">
+							<source name="PositiveFluTests" xsi:type="ExpressionRef"/>
+						</operand>
+						<operand valueType="t:Integer" value="0" xsi:type="Literal"/>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>
+		</def>		
+		<def name="sex" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Equal">
+					<operand path="gender" xsi:type="Property" >
+						<source name="Patient" xsi:type="ExpressionRef"/>
+					</operand>
+					<operand valueType="t:String" value="male" xsi:type="Literal"/>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="2" xsi:type="Literal"/>
+			</expression>
+		</def>
+		<def name="brthdat" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Less">
+					<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+					<operand valueType="t:Integer" value="1" xsi:type="Literal"/>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else xsi:type="If">
+					<condition xsi:type="And">
+						<operand xsi:type="GreaterOrEqual">
+							<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+							<operand valueType="t:Integer" value="1" xsi:type="Literal"/>
+						</operand>
+						<operand xsi:type="Less">
+							<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+							<operand valueType="t:Integer" value="24" xsi:type="Literal"/>
+						</operand>					
+					</condition>		
+					<then valueType="t:String" value="2" xsi:type="Literal"/>
+					<else xsi:type="If">
+						<condition xsi:type="And">
+							<operand xsi:type="GreaterOrEqual">
+								<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+								<operand valueType="t:Integer" value="24" xsi:type="Literal"/>
+							</operand>
+							<operand xsi:type="Less">
+								<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+								<operand valueType="t:Integer" value="72" xsi:type="Literal"/>
+							</operand>					
+						</condition>		
+						<then valueType="t:String" value="3" xsi:type="Literal"/>
+						<else xsi:type="If">
+							<condition xsi:type="And">
+								<operand xsi:type="GreaterOrEqual">
+									<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+									<operand valueType="t:Integer" value="72" xsi:type="Literal"/>
+								</operand>
+								<operand xsi:type="Less">
+									<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+									<operand valueType="t:Integer" value="156" xsi:type="Literal"/>
+								</operand>					
+							</condition>		
+							<then valueType="t:String" value="4" xsi:type="Literal"/>
+							<else xsi:type="If">
+								<condition xsi:type="And">
+									<operand xsi:type="GreaterOrEqual">
+										<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+										<operand valueType="t:Integer" value="156" xsi:type="Literal"/>
+									</operand>
+									<operand xsi:type="Less">
+										<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+										<operand valueType="t:Integer" value="228" xsi:type="Literal"/>
+									</operand>					
+								</condition>		
+								<then valueType="t:String" value="5" xsi:type="Literal"/>
+								<else xsi:type="If">
+									<condition xsi:type="And">
+										<operand xsi:type="GreaterOrEqual">
+											<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+											<operand valueType="t:Integer" value="228" xsi:type="Literal"/>
+										</operand>
+										<operand xsi:type="Less">
+											<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+											<operand valueType="t:Integer" value="300" xsi:type="Literal"/>
+										</operand>					
+									</condition>		
+									<then valueType="t:String" value="6" xsi:type="Literal"/>
+									<else xsi:type="If">
+										<condition xsi:type="And">
+											<operand xsi:type="GreaterOrEqual">
+												<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+												<operand valueType="t:Integer" value="300" xsi:type="Literal"/>
+											</operand>
+											<operand xsi:type="Less">
+												<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+												<operand valueType="t:Integer" value="540" xsi:type="Literal"/>
+											</operand>					
+										</condition>		
+										<then valueType="t:String" value="7" xsi:type="Literal"/>
+										<else xsi:type="If">
+											<condition xsi:type="And">
+												<operand xsi:type="GreaterOrEqual">
+													<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+													<operand valueType="t:Integer" value="540" xsi:type="Literal"/>
+												</operand>
+												<operand xsi:type="Less">
+													<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+													<operand valueType="t:Integer" value="780" xsi:type="Literal"/>
+												</operand>					
+											</condition>		
+											<then valueType="t:String" value="8" xsi:type="Literal"/>
+											<else xsi:type="If">
+												<condition xsi:type="And">
+													<operand xsi:type="GreaterOrEqual">
+														<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+														<operand valueType="t:Integer" value="780" xsi:type="Literal"/>
+													</operand>
+													<operand xsi:type="Less">
+														<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+														<operand valueType="t:Integer" value="960" xsi:type="Literal"/>
+													</operand>					
+												</condition>		
+												<then valueType="t:String" value="9" xsi:type="Literal"/>
+												<else xsi:type="If">
+													<condition xsi:type="GreaterOrEqual">
+														<operand name="AgeAtAdmitInMonths" xsi:type="ExpressionRef"/>
+														<operand valueType="t:Integer" value="960" xsi:type="Literal"/>
+													</condition>
+													<then valueType="t:String" value="10" xsi:type="Literal"/>
+													<else valueType="t:String" value="999" xsi:type="Literal"/>
+												</else>
+											</else>
+										</else>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</expression>
+		</def>
+		<def name="icuadmitdat" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Equal">
+					<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+					<operand name="EncounterStart" xsi:type="ParameterRef"/>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else xsi:type="If">
+					<condition xsi:type="And">
+						<operand xsi:type="Greater">
+							<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+							<operand name="EncounterStart" xsi:type="ParameterRef"/>
+						</operand>
+						<operand xsi:type="LessOrEqual">
+							<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+							<operand xsi:type="Add">
+								<operand name="EncounterStart" xsi:type="ParameterRef"/>
+								<operand value="24" unit="hours" xsi:type="Quantity"/>
+							</operand>
+						</operand>					
+					</condition>		
+					<then valueType="t:String" value="2" xsi:type="Literal"/>
+					<else xsi:type="If">
+						<condition xsi:type="And">
+							<operand xsi:type="Greater">
+								<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+								<operand xsi:type="Add">
+									<operand name="EncounterStart" xsi:type="ParameterRef"/>
+									<operand value="24" unit="hours" xsi:type="Quantity"/>
+								</operand>
+							</operand>
+							<operand xsi:type="LessOrEqual">
+								<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+								<operand xsi:type="Add">
+									<operand name="EncounterStart" xsi:type="ParameterRef"/>
+									<operand value="72" unit="hours" xsi:type="Quantity"/>
+								</operand>
+							</operand>						
+						</condition>		
+						<then valueType="t:String" value="3" xsi:type="Literal"/>
+						<else xsi:type="If">
+							<condition xsi:type="And">
+								<operand xsi:type="Greater">
+									<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+									<operand xsi:type="Add">
+										<operand name="EncounterStart" xsi:type="ParameterRef"/>
+										<operand value="72" unit="hours" xsi:type="Quantity"/>
+									</operand>
+								</operand>
+								<operand xsi:type="LessOrEqual">
+									<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+									<operand xsi:type="Add">
+										<operand name="EncounterStart" xsi:type="ParameterRef"/>
+										<operand value="144" unit="hours" xsi:type="Quantity"/>
+									</operand>
+								</operand>					
+							</condition>		
+							<then valueType="t:String" value="4" xsi:type="Literal"/>
+							<else xsi:type="If">
+								<condition xsi:type="And">
+									<operand xsi:type="Greater">
+										<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+										<operand xsi:type="Add">
+											<operand name="EncounterStart" xsi:type="ParameterRef"/>
+											<operand value="144" unit="hours" xsi:type="Quantity"/>
+										</operand>
+									</operand>
+									<operand xsi:type="LessOrEqual">
+										<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+										<operand xsi:type="Add">
+											<operand name="EncounterStart" xsi:type="ParameterRef"/>
+											<operand value="312" unit="hours" xsi:type="Quantity"/>
+										</operand>
+									</operand>					
+								</condition>		
+								<then valueType="t:String" value="5" xsi:type="Literal"/>
+								<else xsi:type="If">
+									<condition xsi:type="And">
+										<operand xsi:type="Greater">
+											<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+											<operand xsi:type="Add">
+												<operand name="EncounterStart" xsi:type="ParameterRef"/>
+												<operand value="312" unit="hours" xsi:type="Quantity"/>
+											</operand>
+										</operand>
+										<operand xsi:type="LessOrEqual">
+											<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+											<operand xsi:type="Add">
+												<operand name="EncounterStart" xsi:type="ParameterRef"/>
+												<operand value="480" unit="hours" xsi:type="Quantity"/>
+											</operand>
+										</operand>					
+									</condition>		
+									<then valueType="t:String" value="6" xsi:type="Literal"/>
+									<else xsi:type="If">
+										<condition xsi:type="Greater">
+											<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+											<operand xsi:type="Add">
+												<operand name="EncounterStart" xsi:type="ParameterRef"/>
+												<operand value="480" unit="hours" xsi:type="Quantity"/>
+											</operand>												
+										</condition>		
+										<then valueType="t:String" value="7" xsi:type="Literal"/>
+										<else valueType="t:String" value="999" xsi:type="Literal"/>
+									</else>
+								</else>
+							</else>
+						</else>
+					</else>
+				</else>
+			</expression>
+		</def>		
+		<def name="fluvac" accessLevel="Public"  context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Greater">
+					<operand xsi:type="Count">
+						<source xsi:type="Query">
+							<source alias="Immun">
+								<expression dataType="fhir:Immunization" dateProperty="date" xsi:type="Retrieve">
+									<dateRange name="TwoWeeksOfAdmit" xsi:type="ExpressionRef"/>
+								</expression>
+							</source>
+							<where xsi:type="And">
+								<operand xsi:type="And">
+									<operand xsi:type="Equal">
+										<operand path="status" scope="Immun" xsi:type="Property"/>
+										<operand valueType="t:String" value="completed" xsi:type="Literal"/>
+									</operand>
+									<operand xsi:type="Equal">
+										<operand path="wasNotGiven" scope="Immun" xsi:type="Property"/>
+										<operand valueType="t:Boolean" value="false" xsi:type="Literal"/>
+									</operand>				
+								</operand>		
+								<operand xsi:type="InValueSet">
+									<code xsi:type="ToConcept">
+										<operand path="vaccineCode.coding" scope="Immun" xsi:type="Property"/>
+									</code>
+									<valueset name="Fluvax" xsi:type="ValueSetRef"/>
+								</operand>
+							</where>
+							<return>
+								<expression path="id" scope="Immun" xsi:type="Property"/>
+							</return>
+						</source>
+					</operand>
+					<operand valueType="t:Integer" value="0" xsi:type="Literal"/>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>		
+			</expression>
+		</def>	
+		<def name="confirmatory_test" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="R">
+						<source name="PositiveFluTests" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="code.coding" scope="R" xsi:type="Property"/>
+							</code>				
+							<valueset name="InfluenzaMolecular" xsi:type="ValueSetRef"/>
+						</condition>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else xsi:type="If">
+					<condition xsi:type="Exists">
+						<operand xsi:type="Filter" scope="R">
+							<source name="PositiveFluTests" xsi:type="ExpressionRef"/>
+							<condition xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="code.coding" scope="R" xsi:type="Property"/>
+								</code>				
+								<valueset name="InfluenzaNonMolecular" xsi:type="ValueSetRef"/>
+							</condition>
+						</operand>					
+					</condition>
+					<then valueType="t:String" value="2" xsi:type="Literal"/>
+					<else valueType="t:String" value="999" xsi:type="Literal"/>
+				</else>
+			</expression>
+		</def>
+		<def name="plateletyn" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="IsNull">
+					<operand name="platelet" xsi:type="ExpressionRef"/>
+				</condition>
+				<then valueType="t:String" value="0" xsi:type="Literal"/>
+				<else valueType="t:String" value="1" xsi:type="Literal"/>
+			</expression>		
+		</def>		
+		<def name="platelet" accessLevel="Public" context="Patient">
+			<expression xsi:type="First">
+				<source xsi:type="Query">
+					<source alias="Obs">
+						<expression name="LabsIcuAdmit" xsi:type="ExpressionRef"/>						
+					</source>
+					<where xsi:type="And">
+						<operand xsi:type="Equal">
+							<operand path="valueQuantity.unit" scope="Obs" xsi:type="Property"/>
+							<operand valueType="t:String" value="10*9/L" xsi:type="Literal"/>
+						</operand>
+						<operand xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="code.coding" scope="Obs" xsi:type="Property"/>
+							</code>
+							<valueset name="Platelet" xsi:type="ValueSetRef"/>
+						</operand>					
+					</where>
+					<return>
+						<expression path="valueQuantity.value" scope="Obs" xsi:type="Property"/>
+					</return>				
+					<sort>
+						<by direction="asc" xsi:type="ByDirection"/>
+					</sort>
+				</source>
+			</expression>
+		</def>		
+		<def name="urineyn" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="IsNull">
+					<operand name="urine" xsi:type="ExpressionRef"/>
+				</condition>
+				<then valueType="t:String" value="" xsi:type="Literal"/>
+				<else valueType="t:String" value="1" xsi:type="Literal"/>
+			</expression>		
+		</def>		
+		<def name="urine" accessLevel="Public" context="Patient">
+			<expression xsi:type="Sum">
+				<source xsi:type="Query">
+					<source alias="Obs">
+						<expression name="VitalsIcuAdmit" xsi:type="ExpressionRef"/>						
+					</source>
+					<where xsi:type="InValueSet">
+						<code xsi:type="ToConcept">
+							<operand path="code.coding" scope="Obs" xsi:type="Property"/>
+						</code>
+						<valueset name="Urine" xsi:type="ValueSetRef"/>						
+					</where>
+					<return>
+						<expression path="valueQuantity.value" scope="Obs" xsi:type="Property"/>					
+					</return>				
+				</source>
+			</expression>
+		</def>			
+		<def name="creatinineyn" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="IsNull">
+					<operand name="creatinine" xsi:type="ExpressionRef"/>
+				</condition>
+				<then valueType="t:String" value="0" xsi:type="Literal"/>
+				<else valueType="t:String" value="1" xsi:type="Literal"/>
+			</expression>		
+		</def>		
+		<def name="creatinine" accessLevel="Public" context="Patient">
+			<expression xsi:type="First">
+				<source xsi:type="Query">
+					<source alias="Obs">
+						<expression name="LabsIcuAdmit" xsi:type="ExpressionRef"/>						
+					</source>
+					<where xsi:type="InValueSet">
+						<code xsi:type="ToConcept">
+							<operand path="code.coding" scope="Obs" xsi:type="Property"/>
+						</code>
+						<valueset name="Creatinine" xsi:type="ValueSetRef"/>							
+					</where>
+					<return>
+						<expression path="valueQuantity.value" scope="Obs" xsi:type="Property"/>
+					</return>				
+					<sort>
+						<by direction="desc" xsi:type="ByDirection"/>
+					</sort>
+				</source>
+			</expression>
+		</def>		
+		<def name="creatinineunt" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Equal">
+					<operand xsi:type="First">
+						<source xsi:type="Query">
+							<source alias="Obs">
+								<expression name="LabsIcuAdmit" xsi:type="ExpressionRef"/>						
+							</source>
+							<where xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="code.coding" scope="Obs" xsi:type="Property"/>
+								</code>
+								<valueset name="Creatinine" xsi:type="ValueSetRef"/>							
+							</where>
+							<return>
+								<expression path="valueQuantity.unit" scope="Obs" xsi:type="Property"/>
+							</return>				
+							<sort>
+								<by direction="desc" xsi:type="ByDirection"/>
+							</sort>
+						</source>
+					</operand>
+					<operand valueType="t:String" value="mg/dL" xsi:type="Literal"/>
+				</condition>
+				<then valueType="t:String" value="2" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>				
+		</def>		
+		<def name="vasopressup" accessLevel="Public" context="Patient">		
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand name="VasopressorQuery" xsi:type="ExpressionRef"/>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>
+		</def>		
+		<def name="vasopresstype___1" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="And">
+							<operand xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+								</code>				
+								<valueset name="Dopamine" xsi:type="ValueSetRef"/>
+							</operand>				
+							<operand xsi:type="Exists">
+								<operand xsi:type="Filter" scope="dosageInstruction">
+									<source path="dosageInstruction" scope="MedOrder" xsi:type="Property"/>
+									<condition xsi:type="And">
+										<operand xsi:type="Less">
+											<operand path="doseQuantity.value" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+										</operand>															
+										<operand xsi:type="Equal">
+											<operand path="doseQuantity.unit" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:String" value="ug/kg/min" xsi:type="Literal"/>
+										</operand>	
+									</condition>
+								</operand>			
+							</operand>															
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>			
+		<def name="vasopresstype___2" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="And">
+							<operand xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+								</code>				
+								<valueset name="Dopamine" xsi:type="ValueSetRef"/>
+							</operand>				
+							<operand xsi:type="Exists">
+								<operand xsi:type="Filter" scope="dosageInstruction">
+									<source path="dosageInstruction" scope="MedOrder" xsi:type="Property"/>
+									<condition xsi:type="And">
+										<operand xsi:type="And">
+											<operand xsi:type="GreaterOrEqual">
+												<operand path="doseQuantity.value" scope="dosageInstruction" xsi:type="Property"/>
+												<operand valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+											</operand>
+											<operand xsi:type="Less">
+												<operand path="doseQuantity.value" scope="dosageInstruction" xsi:type="Property"/>
+												<operand valueType="t:Decimal" value="15.0" xsi:type="Literal"/>
+											</operand>					
+										</operand>
+										<operand xsi:type="Equal">
+											<operand path="doseQuantity.unit" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:String" value="ug/kg/min" xsi:type="Literal"/>
+										</operand>	
+									</condition>
+								</operand>			
+							</operand>															
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>	
+		<def name="vasopresstype___3" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="And">
+							<operand xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+								</code>				
+								<valueset name="Dopamine" xsi:type="ValueSetRef"/>
+							</operand>				
+							<operand xsi:type="Exists">
+								<operand xsi:type="Filter" scope="dosageInstruction">
+									<source path="dosageInstruction" scope="MedOrder" xsi:type="Property"/>
+									<condition xsi:type="And">
+										<operand xsi:type="Greater">
+											<operand path="doseQuantity.value" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:Decimal" value="15.0" xsi:type="Literal"/>
+										</operand>															
+										<operand xsi:type="Equal">
+											<operand path="doseQuantity.unit" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:String" value="ug/kg/min" xsi:type="Literal"/>
+										</operand>	
+									</condition>
+								</operand>			
+							</operand>															
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>	
+		<def name="vasopresstype___4" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Dobutamine" xsi:type="ValueSetRef"/>
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>	
+		<def name="vasopresstype___5" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Milrinone" xsi:type="ValueSetRef"/>
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>		
+		<def name="vasopresstype___6" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="And">
+							<operand xsi:type="Or">
+								<operand xsi:type="InValueSet">
+									<code xsi:type="ToConcept">
+										<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+									</code>				
+									<valueset name="Epinephrine" xsi:type="ValueSetRef"/>
+								</operand>															
+								<operand xsi:type="InValueSet">
+									<code xsi:type="ToConcept">
+										<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+									</code>				
+									<valueset name="Norepinephrine" xsi:type="ValueSetRef"/>
+								</operand>
+							</operand>
+							<operand xsi:type="Exists">
+								<operand xsi:type="Filter" scope="dosageInstruction">
+									<source path="dosageInstruction" scope="MedOrder" xsi:type="Property"/>
+									<condition xsi:type="And">
+										<operand xsi:type="LessOrEqual">
+											<operand path="doseQuantity.value" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:Decimal" value="0.1" xsi:type="Literal"/>
+										</operand>															
+										<operand xsi:type="Equal">
+											<operand path="doseQuantity.unit" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:String" value="ug/kg/min" xsi:type="Literal"/>
+										</operand>	
+									</condition>
+								</operand>										
+							</operand>
+						</condition>					
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>
+		<def name="vasopresstype___7" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="And">
+							<operand xsi:type="Or">
+								<operand xsi:type="InValueSet">
+									<code xsi:type="ToConcept">
+										<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+									</code>				
+									<valueset name="Epinephrine" xsi:type="ValueSetRef"/>
+								</operand>															
+								<operand xsi:type="InValueSet">
+									<code xsi:type="ToConcept">
+										<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+									</code>				
+									<valueset name="Norepinephrine" xsi:type="ValueSetRef"/>
+								</operand>
+							</operand>
+							<operand xsi:type="Exists">
+								<operand xsi:type="Filter" scope="dosageInstruction">
+									<source path="dosageInstruction" scope="MedOrder" xsi:type="Property"/>
+									<condition xsi:type="And">
+										<operand xsi:type="Greater">
+											<operand path="doseQuantity.value" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:Decimal" value="0.1" xsi:type="Literal"/>
+										</operand>															
+										<operand xsi:type="Equal">
+											<operand path="doseQuantity.unit" scope="dosageInstruction" xsi:type="Property"/>
+											<operand valueType="t:String" value="ug/kg/min" xsi:type="Literal"/>
+										</operand>	
+									</condition>
+								</operand>										
+							</operand>
+						</condition>					
+					</operand>			
+				</condition>					
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>
+		<def name="vasopresstype___8" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Vasopressin" xsi:type="ValueSetRef"/>
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>
+		<def name="vasopresstype___9" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="VasopressorQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Phenylephrine" xsi:type="ValueSetRef"/>
+						</condition>						
+					</operand>			
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>		
+		<def name="antiviral" accessLevel="Public"  context="Patient">		
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand name="AntiviralQuery" xsi:type="ExpressionRef"/>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>
+		</def>		
+		<def name="av_names___1" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand name="OseltamivirOrders" xsi:type="ExpressionRef"/>				
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>			
+		<def name="av_names___2" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="AntiviralQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Zanamivir" xsi:type="ValueSetRef"/>
+						</condition>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>	
+		<def name="av_names___4" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="AntiviralQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Peramivir" xsi:type="ValueSetRef"/>
+						</condition>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>
+		<def name="av_names___5" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="AntiviralQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Amantadine" xsi:type="ValueSetRef"/>
+						</condition>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>
+		<def name="av_names___6" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="AntiviralQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+							</code>				
+							<valueset name="Rimantadine" xsi:type="ValueSetRef"/>
+						</condition>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>
+		<def name="av_names___7" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Filter" scope="MedOrder">
+						<source name="AntiviralQuery" xsi:type="ExpressionRef"/>
+						<condition xsi:type="And">
+							<operand xsi:type="IsFalse">
+								<operand xsi:type="InValueSet">
+									<code xsi:type="ToConcept">
+										<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+									</code>				
+									<valueset name="Oseltamivir" xsi:type="ValueSetRef"/>
+								</operand>
+							</operand>
+							<operand xsi:type="And">
+								<operand xsi:type="IsFalse">
+									<operand xsi:type="InValueSet">
+										<code xsi:type="ToConcept">
+											<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+										</code>				
+										<valueset name="Zanamivir" xsi:type="ValueSetRef"/>
+									</operand>
+								</operand>	
+								<operand xsi:type="And">
+									<operand xsi:type="IsFalse">
+										<operand xsi:type="InValueSet">
+											<code xsi:type="ToConcept">
+												<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+											</code>				
+											<valueset name="Peramivir" xsi:type="ValueSetRef"/>
+										</operand>
+									</operand>	
+									<operand xsi:type="And">
+										<operand xsi:type="IsFalse">
+											<operand xsi:type="InValueSet">
+												<code xsi:type="ToConcept">
+													<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+												</code>				
+												<valueset name="Amantadine" xsi:type="ValueSetRef"/>
+											</operand>
+										</operand>	
+										<operand xsi:type="IsFalse">
+											<operand xsi:type="InValueSet">
+												<code xsi:type="ToConcept">
+													<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+												</code>				
+												<valueset name="Rimantadine" xsi:type="ValueSetRef"/>
+											</operand>
+										</operand>											
+									</operand>	
+								</operand>	
+							</operand>
+						</condition>
+					</operand>					
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>			
+		<def name="osel_tube" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Query">
+						<source alias="osel">
+							<expression name="OseltamivirOrders" xsi:type="ExpressionRef"/>						
+						</source>
+						<where 	xsi:type="Or">
+							<operand xsi:type="Contains">
+								<operand path="dosageInstruction.route.coding" scope="osel" xsi:type="Property"/>
+								<operand code="127492001" xsi:type="Code">
+									<system name="SNOMED" xsi:type="CodeSystemRef"/>
+								</operand>	
+							</operand>	
+							<operand xsi:type="Contains">
+								<operand path="dosageInstruction.route.coding" scope="osel" xsi:type="Property"/>
+								<operand code="418441008" xsi:type="Code">
+									<system name="SNOMED" xsi:type="CodeSystemRef"/>
+								</operand>	
+							</operand>								
+						</where>		
+					</operand>	
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>		
+		</def>		
+		<def name="osel_days" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="IsNull">
+					<operand name="OseltamivirDays" xsi:type="ExpressionRef"/>						
+				</condition>
+				<then valueType="t:String" value="" xsi:type="Literal"/>
+				<else name="OseltamivirDays" xsi:type="ExpressionRef"/>
+			</expression>		
+		</def>	
+		<def name="osel_dose" accessLevel="Public" context="Patient">
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Query">
+						<source alias="osel">
+							<expression name="OseltamivirDoses" xsi:type="ExpressionRef"/>						
+						</source>
+						<where xsi:type="Contains">
+							<operand path="dosageInstruction.doseQuantity.value" scope="osel" xsi:type="Property"/>	
+							<operand valueType="t:Decimal" value="75.0" xsi:type="Literal"/>							
+						</where>		
+					</operand>	
+				</condition>			
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else xsi:type="If">
+					<condition xsi:type="Exists">
+						<operand xsi:type="Query">
+							<source alias="osel">
+								<expression name="OseltamivirDoses" xsi:type="ExpressionRef"/>						
+							</source>
+							<where xsi:type="Contains">
+								<operand path="dosageInstruction.doseQuantity.value" scope="osel" xsi:type="Property"/>	
+								<operand valueType="t:Decimal" value="150.0" xsi:type="Literal"/>							
+							</where>		
+						</operand>	
+					</condition>
+					<then valueType="t:String" value="2" xsi:type="Literal"/>
+					<else valueType="t:String" value="" xsi:type="Literal"/>
+				</else>
+			</expression>		
+		</def>		
+		<def name="antibiotic" accessLevel="Public" context="Patient" >		
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Query">
+						<source alias="MedOrder">
+							<expression name="MedicationOrders" xsi:type="ExpressionRef"/>		
+						</source>
+						<where xsi:type="And">
+							<operand xsi:type="Or">
+								<operand xsi:type="Equal">
+									<operand path="status" scope="MedOrder" xsi:type="Property"/>
+									<operand valueType="t:String" value="active" xsi:type="Literal"/>
+								</operand>
+								<operand xsi:type="Equal">
+									<operand path="status" scope="MedOrder" xsi:type="Property"/>
+									<operand valueType="t:String" value="completed" xsi:type="Literal"/>
+								</operand>				
+							</operand>		
+							<operand xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+								</code>
+								<valueset name="Antibiotic" xsi:type="ValueSetRef"/>
+							</operand>
+						</where>
+					</operand>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>
+		</def>	
+		<def name="corticosteroid" accessLevel="Public" context="Patient" >		
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Query">
+						<source alias="MedOrder">
+							<expression name="MedicationOrders" xsi:type="ExpressionRef"/>		
+						</source>
+						<where xsi:type="And">
+							<operand xsi:type="Or">
+								<operand xsi:type="Equal">
+									<operand path="status" scope="MedOrder" xsi:type="Property"/>
+									<operand valueType="t:String" value="active" xsi:type="Literal"/>
+								</operand>
+								<operand xsi:type="Equal">
+									<operand path="status" scope="MedOrder" xsi:type="Property"/>
+									<operand valueType="t:String" value="completed" xsi:type="Literal"/>
+								</operand>				
+							</operand>		
+							<operand xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+								</code>
+								<valueset name="Corticosteroid" xsi:type="ValueSetRef"/>
+							</operand>
+						</where>
+					</operand>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>
+		</def>		
+		<def name="antifungal" accessLevel="Public" context="Patient" >		
+			<expression xsi:type="If">
+				<condition xsi:type="Exists">
+					<operand xsi:type="Query">
+						<source alias="MedOrder">
+							<expression name="MedicationOrders" xsi:type="ExpressionRef"/>		
+						</source>
+						<where xsi:type="And">
+							<operand xsi:type="Or">
+								<operand xsi:type="Equal">
+									<operand path="status" scope="MedOrder" xsi:type="Property"/>
+									<operand valueType="t:String" value="active" xsi:type="Literal"/>
+								</operand>
+								<operand xsi:type="Equal">
+									<operand path="status" scope="MedOrder" xsi:type="Property"/>
+									<operand valueType="t:String" value="completed" xsi:type="Literal"/>
+								</operand>				
+							</operand>		
+							<operand xsi:type="InValueSet">
+								<code xsi:type="ToConcept">
+									<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+								</code>
+								<valueset name="Antifungal" xsi:type="ValueSetRef"/>
+							</operand>
+						</where>
+					</operand>
+				</condition>
+				<then valueType="t:String" value="1" xsi:type="Literal"/>
+				<else valueType="t:String" value="" xsi:type="Literal"/>
+			</expression>
+		</def>
+		<def name="Patient" accessLevel="Private" context="Patient">
+			<expression xsi:type="SingletonFrom">
+				<operand dataType="fhir:Patient" xsi:type="Retrieve"/>
+			</expression>
+		</def>
+		<def name="LabsIcuAdmit" accessLevel="Private" context="Patient">
+			<expression dataType="fhir:Observation" codeProperty="category" dateProperty="date" xsi:type="Retrieve">
+				<codes code="laboratory" xsi:type="Code">
+					<system name="observation-category" xsi:type="CodeSystemRef"/>
+				</codes>
+				<dateRange name="EncounterInterval" xsi:type="ExpressionRef"/>
+			</expression>												
+		</def>
+		<def name="VitalsIcuAdmit" accessLevel="Private" context="Patient">
+			<expression dataType="fhir:Observation" codeProperty="category" dateProperty="date" xsi:type="Retrieve">
+				<codes code="vital-signs" xsi:type="Code">
+					<system name="observation-category" xsi:type="CodeSystemRef"/>
+				</codes>
+				<dateRange name="EncounterInterval" xsi:type="ExpressionRef"/>
+			</expression>												
+		</def>		
+		<def name="AgeAtAdmitInMonths" accessLevel="Private" context="Patient" >
+			<expression precision="Month" xsi:type="CalculateAgeAt">
+				<operand path="birthDate" xsi:type="Property" >
+					<source name="Patient" xsi:type="ExpressionRef"/>
+				</operand>
+				<operand name="EncounterStart" xsi:type="ParameterRef"/>
+			</expression>
+		</def>
+		<def name="EncounterInterval" accessLevel="Private" context="Patient">
+			<expression lowClosed="true" highClosed="false" xsi:type="Interval">
+				<low name="EncounterStart" xsi:type="ParameterRef"/>
+				<high name="EncounterEnd" xsi:type="ParameterRef"/>
+			</expression>
+		</def>
+		<def name="TwoWeeksOfAdmit" accessLevel="Private" context="Patient">
+			<expression lowClosed="true" highClosed="false" xsi:type="Interval">
+				<low xsi:type="Subtract">
+					<operand name="EncounterStart" xsi:type="ParameterRef"/>
+					<operand value="14" unit="days" xsi:type="Quantity"/>
+
+				</low>
+				<high xsi:type="Add">
+					<operand name="EncounterStart" xsi:type="ParameterRef"/>
+					<operand value="14" unit="days" xsi:type="Quantity"/>
+				</high>
+			</expression>
+		</def>		
+		<def name="PositiveFluTests" accessLevel="Private" context="Patient">
+			<expression xsi:type="Query">
+				<source alias="Obs">
+					<expression dataType="fhir:Observation" codeProperty="category" dateProperty="date" xsi:type="Retrieve">
+						<codes code="laboratory" xsi:type="Code">
+							<system name="observation-category" xsi:type="CodeSystemRef"/>
+						</codes>
+						<dateRange name="TwoWeeksOfAdmit" xsi:type="ExpressionRef"/>
+					</expression>
+				</source>
+				<where xsi:type="And">
+					<operand xsi:type="And">
+						<operand xsi:type="In">
+							<operand path="effectiveDateTime" scope="Obs" xsi:type="Property"/>
+							<operand name="TwoWeeksOfAdmit" xsi:type="ExpressionRef"/>
+						</operand>
+						<operand xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="valueCodeableConcept.coding" scope="Obs" xsi:type="Property"/>
+							</code>
+							<valueset name="InfluenzaPositive" xsi:type="ValueSetRef"/>
+						</operand>					
+					</operand>		
+					<operand xsi:type="InValueSet">
+						<code xsi:type="ToConcept">
+							<operand path="code.coding" scope="Obs" xsi:type="Property"/>
+						</code>
+						<valueset name="Influenza" xsi:type="ValueSetRef"/>
+					</operand>
+				</where>
+			</expression>
+		</def>			
+		<def name="IcuAdmitDate" accessLevel="Private" context="Patient">
+			<expression xsi:type="First">
+				<source xsi:type="Query">
+					<source alias="Obs">
+						<expression dataType="fhir:Observation" codeProperty="category" dateProperty="date" xsi:type="Retrieve">
+							<codes code="social-history" xsi:type="Code">
+								<system name="observation-category" xsi:type="CodeSystemRef"/>
+							</codes>
+							<dateRange name="EncounterInterval" xsi:type="ExpressionRef"/>
+						</expression>							
+					</source>
+					<where 	xsi:type="And">
+						<operand xsi:type="In">
+							<operand path="effectiveDateTime" scope="Obs" xsi:type="Property"/>
+							<operand name="EncounterInterval" xsi:type="ExpressionRef"/>
+						</operand>
+						<operand xsi:type="InValueSet">
+							<code xsi:type="ToConcept">
+								<operand path="code.coding" scope="Obs" xsi:type="Property"/>
+							</code>
+							<valueset name="IcuAdmit" xsi:type="ValueSetRef"/>
+						</operand>									
+					</where>
+					<return>
+						<expression path="valueDateTime" scope="Obs" xsi:type="Property"/>
+					</return>
+					<sort xsi:type="SortClause">
+						<by direction="asc" xsi:type="ByDirection"/>
+					</sort>
+				</source>
+			</expression>
+		</def>	
+		<def name="24HoursOfIcuAdmit" accessLevel="Private" context="Patient">
+			<expression lowClosed="true" highClosed="false" xsi:type="Interval">
+				<low name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+				<high xsi:type="Add">
+					<operand name="IcuAdmitDate" xsi:type="ExpressionRef"/>
+					<operand value="24" unit="hours" xsi:type="Quantity"/>
+				</high>
+			</expression>
+		</def>
+		<def name="MedicationOrders" accessLevel="Private" context="Patient">
+			<expression dataType="fhir:MedicationOrder" dateProperty="datewritten" xsi:type="Retrieve">
+				<dateRange name="EncounterInterval" xsi:type="ExpressionRef"/>
+			</expression>												
+		</def>		
+		<def name="AntiviralQuery" accessLevel="Private" context="Patient">		
+			<expression xsi:type="Query">
+				<source alias="MedOrder">
+					<expression name="MedicationOrders" xsi:type="ExpressionRef"/>		
+				</source>
+				<where xsi:type="And">
+					<operand xsi:type="Or">
+						<operand xsi:type="Equal">
+							<operand path="status" scope="MedOrder" xsi:type="Property"/>
+							<operand valueType="t:String" value="active" xsi:type="Literal"/>
+						</operand>
+						<operand xsi:type="Equal">
+							<operand path="status" scope="MedOrder" xsi:type="Property"/>
+							<operand valueType="t:String" value="completed" xsi:type="Literal"/>
+						</operand>				
+					</operand>		
+					<operand xsi:type="InValueSet">
+						<code xsi:type="ToConcept">
+							<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+						</code>
+						<valueset name="Antiviral" xsi:type="ValueSetRef"/>
+					</operand>
+				</where>
+			</expression>
+		</def>			
+		<def name="OseltamivirOrders" accessLevel="Private" context="Patient">
+			<expression xsi:type="Filter" scope="MedOrder">
+				<source name="AntiviralQuery" xsi:type="ExpressionRef"/>
+				<condition xsi:type="InValueSet">
+					<code xsi:type="ToConcept">
+						<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+					</code>				
+					<valueset name="Oseltamivir" xsi:type="ValueSetRef"/>
+				</condition>								
+			</expression>		
+		</def>		
+		<def name="OseltamivirDays" accessLevel="Private" context="Patient">
+			<expression xsi:type="Sum">
+				<source xsi:type="Query">
+					<source alias="osel">
+						<expression name="OseltamivirOrders" xsi:type="ExpressionRef"/>						
+					</source>
+					<return>
+						<expression precision="Day" xsi:type="DifferenceBetween">
+							<operand path="dateWritten" scope="osel" xsi:type="Property"/>
+							<operand path="dateEnded" scope="osel" xsi:type="Property"/>
+						</expression>
+					</return>		
+				</source>	
+			</expression>		
+		</def>		
+		<def name="OseltamivirDoses" accessLevel="Private" context="Patient">
+			<expression xsi:type="Filter" scope="R">
+				<source xsi:type="Filter" scope="S">
+					<source xsi:type="Filter" scope="T">
+						<source xsi:type="Filter" scope="U">
+							<source name="OseltamivirOrders" xsi:type="ExpressionRef"/>
+							<condition xsi:type="Contains">
+								<operand path="dosageInstruction.timing.repeat.frequency" scope="U" xsi:type="Property"/>
+								<operand valueType="t:Integer" value="1" xsi:type="Literal"/>
+							</condition>
+						</source>
+						<condition xsi:type="Contains">
+							<operand path="dosageInstruction.timing.repeat.period" scope="T" xsi:type="Property"/>
+							<operand valueType="t:Decimal" value="12.0" xsi:type="Literal"/>						
+						</condition>
+					</source>
+					<condition xsi:type="Contains">
+						<operand path="dosageInstruction.timing.repeat.periodUnits" scope="S" xsi:type="Property"/>
+						<operand valueType="t:String" value="h" xsi:type="Literal"/>					
+					</condition>
+				</source>
+				<condition xsi:type="Contains">
+					<operand path="dosageInstruction.doseQuantity.unit" scope="R" xsi:type="Property"/>
+					<operand valueType="t:String" value="mg" xsi:type="Literal"/>				
+				</condition>
+			</expression>				
+		</def>			
+		<def name="VasopressorQuery" accessLevel="Private"  context="Patient">		
+			<expression xsi:type="Query">
+				<source alias="MedOrder">
+					<expression name="MedicationOrders" xsi:type="ExpressionRef"/>					
+				</source>
+				<where xsi:type="And">
+					<operand xsi:type="Or">
+						<operand xsi:type="Equal">
+							<operand path="status" scope="MedOrder" xsi:type="Property"/>
+							<operand valueType="t:String" value="active" xsi:type="Literal"/>
+						</operand>
+						<operand xsi:type="Equal">
+							<operand path="status" scope="MedOrder" xsi:type="Property"/>
+							<operand valueType="t:String" value="completed" xsi:type="Literal"/>
+						</operand>				
+					</operand>		
+					<operand xsi:type="InValueSet">
+						<code xsi:type="ToConcept">
+							<operand path="medicationCodeableConcept.coding" scope="MedOrder" xsi:type="Property"/>
+						</code>
+						<valueset name="Vasopressor" xsi:type="ValueSetRef"/>
+					</operand>
+				</where>
+			</expression>
+		</def>		
+	</statements>
+</library>

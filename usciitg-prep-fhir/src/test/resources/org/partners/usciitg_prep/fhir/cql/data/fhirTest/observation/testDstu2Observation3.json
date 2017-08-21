@@ -1,0 +1,36 @@
+{
+	"resourceType": "Observation",
+	"id": "fhirTestObservation3",
+	 "identifier": [
+    	{
+      	"use": "official",
+      	"system": "http://mcm.usciitg-prep.org",
+      	"value": "fhirTestObservation3"
+    	}
+  	],		
+	"meta": {
+		"versionId": "1",
+		"lastUpdated": "2016-12-29T04:57:09.213-05:00"
+	},
+	"status": "final",
+	"effectiveDateTime": "2016-06-01T21:44:22.126-05:00",
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "305351004",
+			"display": "Admission to intensive care unit"
+		}]
+	},
+	"category": {
+    	"text": "Social History",
+        "coding": [{
+            "system": "http://hl7.org/fhir/observation-category",
+            "code": "social-history",
+            "display": "Social History"
+        }]
+    },	
+	"subject": {
+		"reference": "Patient/fhirTest"
+	},
+	"valueDateTime": "2016-06-01T21:44:22.126-05:00"	
+}

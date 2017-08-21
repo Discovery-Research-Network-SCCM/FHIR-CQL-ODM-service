@@ -1,0 +1,40 @@
+{
+	"resourceType": "Observation",
+	"id": "fhirTestObservation6",
+	 "identifier": [
+    	{
+      	"use": "official",
+      	"system": "http://mcm.usciitg-prep.org",
+      	"value": "fhirTestObservation6"
+    	}
+  	],		
+	"meta": {
+		"versionId": "1",
+		"lastUpdated": "2016-12-29T04:57:09.213-05:00"
+	},
+	"status": "final",
+	"effectiveDateTime": "2016-06-02T00:44:22.126-05:00",
+	"code": {
+		"coding": [{
+			"system": "http://loinc.org",
+			"code": "9188-4",
+			"display": "Urine output 1 hour"
+		}]
+	},
+	"category": {
+    	"text": "Vital Signs",
+        "coding": [{
+            "system": "http://hl7.org/fhir/observation-category",
+            "code": "vital-signs",
+            "display": "Vital Signs"
+        }]
+    },
+	"subject": {
+		"reference": "Patient/fhirTest"
+	},
+	"valueQuantity": {
+		"value": 90,
+		"unit": "mL/h",
+		"system": "http://unitsofmeasure.org"
+	}
+}

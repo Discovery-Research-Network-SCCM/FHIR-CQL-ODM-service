@@ -1,0 +1,85 @@
+{
+  "resourceType": "MedicationOrder",
+  "id": "fhirTestMedicationOrder1",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://mcm.usciitg-prep.org",
+      "value": "fhirTestMedicationOrder1"
+    }
+  ],
+  "dateWritten": "2016-06-10",
+  "status": "active",
+  "patient": {
+    "reference": "Patient/fhirTest",
+    "display": "Fhir Test"
+  },
+  "reasonCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "65363002",
+        "display": "Otitis Media"
+      }
+    ]
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "69722",
+        "display": "Zanamivir"
+      },
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "582580",
+        "display": "Zanamivir 5 MG/ACTUAT [Relenza]"
+      }      
+    ]
+  },
+  "dosageInstruction": [
+    {
+      "text": "Take 5ml three times daily",
+      "additionalInstructions": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "311504000",
+            "display": "With or after food"
+          }
+        ]
+      },
+      "timing": {
+        "repeat": {
+          "frequency": 3,
+          "period": 1,
+          "periodUnits": "d"
+        }
+      },
+      "siteCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "181220002",
+            "display": "Entire oral cavity"
+          }
+        ]
+      },
+      "route": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "26643006",
+            "display": "Oral Route"
+          }
+        ]
+      },
+      "doseQuantity": {
+        "value": 5,
+        "unit": "mL",
+        "system": "http://unitsofmeasure.org",
+        "code": "mL"
+      }
+    }
+  ]
+}

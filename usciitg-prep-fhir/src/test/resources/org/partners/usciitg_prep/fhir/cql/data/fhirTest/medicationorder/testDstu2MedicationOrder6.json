@@ -1,0 +1,46 @@
+{
+  "resourceType": "MedicationOrder",
+  "id": "fhirTestMedicationOrder6",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://mcm.usciitg-prep.org",
+      "value": "fhirTestMedicationOrder6"
+    }
+  ],
+  "dateWritten": "2016-06-04",
+  "status": "active",
+  "patient": {
+    "reference": "Patient/fhirTest",
+    "display": "Fhir Test"
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "121243",
+        "display": "voriconazole"
+      }     
+    ]
+  },
+  "dosageInstruction": [
+    {
+      "text": "100 mg",
+      "route": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "47625008",
+            "display": "Intravenous route"
+          }
+        ]
+      },
+      "doseQuantity": {
+        "value": 100,
+        "unit": "mg",
+        "system": "http://unitsofmeasure.org",
+        "code": "mg"
+      }
+    }
+  ]
+}

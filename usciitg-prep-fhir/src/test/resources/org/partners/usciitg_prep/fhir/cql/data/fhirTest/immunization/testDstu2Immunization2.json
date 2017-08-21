@@ -1,0 +1,24 @@
+{
+	"resourceType": "Immunization",
+	"id": "fhirTestImmunization2",
+	 "identifier": [
+    	{
+      	"use": "official",
+      	"system": "http://mcm.usciitg-prep.org",
+      	"value": "fhirTestImmunization2"
+    	}
+  	],		
+	"meta": {
+		"versionId": "1",
+		"lastUpdated": "2017-03-07T01:26:54.007-05:00"
+	},
+	"status": "completed",
+	"date": "2014-05-20T01:05:11-05:00",
+	"vaccineCode": {
+	},
+	"patient": {
+		"reference": "Patient/fhirTest"
+	},
+	"wasNotGiven": false,
+	"reported": false
+}

@@ -1,0 +1,3 @@
+CREATE TABLE dag_fhir_servers(ID INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), group_id INT, fhir_endpoint_url VARCHAR(100), fhir_endpoint_username VARCHAR(100), fhir_endpoint_password VARCHAR(100), PRIMARY KEY (ID));
+
+CREATE TABLE crf_elm_queries(ID INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), project_id INT, event_id INT, instrument VARCHAR(100), path VARCHAR(250),  identifier varchar(250), system varchar(250), version varchar(100), PRIMARY KEY (ID));

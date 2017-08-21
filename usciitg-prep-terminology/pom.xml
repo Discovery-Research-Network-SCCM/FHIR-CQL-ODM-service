@@ -1,0 +1,124 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>usciitg-prep-mcm</artifactId>
+		<groupId>org.partners.usciitg-prep</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>usciitg-prep-terminology</artifactId>
+	<packaging>jar</packaging>
+
+	<name>usciitg-prep-terminology</name>
+	<url>http://maven.apache.org</url>
+
+	<repositories>
+		<repository>
+			<id>oss-sonatype</id>
+			<name>oss-sonatype</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- maven-compiler-plugin -->
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+
+		<!-- integration test properties, need to provide via command line -->
+		<usciitg.datasource>java:/MySqlRedCapDS</usciitg.datasource>
+		<skipITs>true</skipITs>    		
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-jpaserver-base</artifactId>
+			<version>2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.3.1.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.11.1.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${version.surefire.plugin}</version>
+				<configuration>
+					<systemPropertyVariables>
+            			<usciitg.db.driver>${usciitg.db.driver}</usciitg.db.driver>
+            			<usciitg.db.user>${usciitg.db.user}</usciitg.db.user>
+            			<usciitg.db.password>${usciitg.db.password}</usciitg.db.password>
+            			<usciitg.db>${usciitg.db}</usciitg.db>
+            			<usciitg.datasource>${usciitg.datasource}</usciitg.datasource>
+            		</systemPropertyVariables>
+            		<skipITs>${skipITs}</skipITs>            		
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${version.surefire.plugin}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+						<phase>test-compile</phase>
+						<configuration> 
+         					<excludes>
+           						<exclude>**/*.class</exclude>
+         					</excludes>
+       					</configuration> 
+					</execution>
+				</executions>
+			</plugin>				
+		</plugins>
+	</build>
+</project>

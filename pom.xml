@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.partners.usciitg-prep</groupId>
+    <artifactId>usciitg-prep-mcm</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>usciitg-prep-mcm</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>usciitg-prep-fhir</module>
+        <module>usciitg-prep-ws</module>
+        <module>usciitg-prep-odm</module>
+        <module>usciitg-prep-terminology</module>
+        <module>usciitg-prep-ear</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.ear.plugin>2.10.1</version.ear.plugin>
+        <version.war.plugin>2.3</version.war.plugin>
+           
+        <!-- other plugin versions -->
+		<version.surefire.plugin>2.10</version.surefire.plugin>
+        <version.spring>4.3.1.RELEASE</version.spring>
+        
+        <!-- maven-compiler-plugin -->
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.partners.usciitg-prep</groupId>
+                <artifactId>usciitg-prep-ws</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>war</type>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.partners.usciitg-prep</groupId>
+                <artifactId>usciitg-prep-terminology</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.partners.usciitg-prep</groupId>
+                <artifactId>usciitg-prep-odm</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>            
+        </dependencies>
+    </dependencyManagement>    
+</project>

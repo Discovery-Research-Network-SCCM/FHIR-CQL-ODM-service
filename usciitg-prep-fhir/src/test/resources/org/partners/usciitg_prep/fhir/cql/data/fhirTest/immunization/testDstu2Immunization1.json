@@ -1,0 +1,29 @@
+{
+	"resourceType": "Immunization",
+	"id": "fhirTestImmunization1",
+	 "identifier": [
+    	{
+      	"use": "official",
+      	"system": "http://mcm.usciitg-prep.org",
+      	"value": "fhirTestImmunization1"
+    	}
+  	],	
+	"meta": {
+		"versionId": "1",
+		"lastUpdated": "2017-03-07T01:26:54.007-05:00"
+	},
+	"status": "completed",
+	"date": "2016-05-20T01:05:11-05:00",
+	"vaccineCode": {
+		"coding": [{
+			"system": "http://hl7.org/fhir/sid/cvx",
+			"code": "140",
+			"display": "Influenza, seasonal, injectable, preservative free"
+		}]
+	},
+	"patient": {
+		"reference": "Patient/fhirTest"
+	},
+	"wasNotGiven": false,
+	"reported": false
+}

@@ -1,0 +1,71 @@
+{
+  "resourceType": "MedicationOrder",
+  "id": "fhirTestMedicationOrder3",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://mcm.usciitg-prep.org",
+      "value": "fhirTestMedicationOrder3"
+    }
+  ],
+  "dateWritten": "2016-06-02",
+  "status": "active",
+  "patient": {
+    "reference": "Patient/fhirTest",
+    "display": "Fhir Test"
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "82122",
+        "display": "Levofloxacin"
+      }    
+    ]
+  },
+  "dosageInstruction": [
+    {
+      "text": "Take 5ml three times daily",
+      "additionalInstructions": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "311504000",
+            "display": "With or after food"
+          }
+        ]
+      },
+      "timing": {
+        "repeat": {
+          "frequency": 3,
+          "period": 1,
+          "periodUnits": "d"
+        }
+      },
+      "siteCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "181220002",
+            "display": "Entire oral cavity"
+          }
+        ]
+      },
+      "route": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "47625008",
+            "display": "Intravenous route"
+          }
+        ]
+      },
+      "doseQuantity": {
+        "value": 5,
+        "unit": "mL",
+        "system": "http://unitsofmeasure.org",
+        "code": "mL"
+      }
+    }
+  ]
+}

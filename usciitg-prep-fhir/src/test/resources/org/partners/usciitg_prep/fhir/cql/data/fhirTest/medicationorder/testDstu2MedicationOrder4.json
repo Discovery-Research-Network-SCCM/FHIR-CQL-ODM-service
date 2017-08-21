@@ -1,0 +1,51 @@
+{
+  "resourceType": "MedicationOrder",
+  "id": "fhirTestMedicationOrder4",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://mcm.usciitg-prep.org",
+      "value": "fhirTestMedicationOrder4"
+    }
+  ],
+  "dateWritten": "2016-06-02",
+  "status": "active",
+  "patient": {
+    "reference": "Patient/fhirTest",
+    "display": "Fhir Test"
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "3628",
+        "display": "Dopamine"
+      },
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "1292750",
+        "display": "DOPamine Hydrochloride 1.6 MG/ML"
+      }       
+    ]
+  },
+  "dosageInstruction": [
+    {
+      "text": "10 ug/kg/min",
+      "route": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "47625008",
+            "display": "Intravenous route"
+          }
+        ]
+      },
+      "doseQuantity": {
+        "value": 10,
+        "unit": "ug/kg/min",
+        "system": "http://unitsofmeasure.org",
+        "code": "ug/kg/min"
+      }
+    }
+  ]
+}
